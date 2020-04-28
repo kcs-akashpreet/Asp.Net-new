@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dotnet-core-deployment
+  labels:
+    app: dotnet-core-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dotnet-core-deployment
+  template:
+    metadata:
+      labels:
+        app: dotnet-core-deployment
+    spec:
+      containers:
+      - name: dotnet-core
+        image: akashkcs/dotnet:#{Build.BuildId}#
+        ports:
+        - containerPort: 80
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: dotnet-core
+spec:
+  ports:
+    - name: dotnet-core
+      port: 80
+      protocol: TCP
+  selector:
+    app: dotnet-core-deployment
+  type: LoadBalancer
+  externalIPs:
+    - 10.0.4.5

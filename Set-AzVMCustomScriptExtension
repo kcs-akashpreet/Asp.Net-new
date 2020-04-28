@@ -1,0 +1,6 @@
+Set-AzVMCustomScriptExtension -ResourceGroupName Support-POC `
+    -VmssName ScaleSetVM `
+    -Location centralus `
+    -FileUri https://scalesetstoragetst.file.core.windows.net/tst/s.zip `
+    -Run 'myScript.ps1' `
+    -Name DemoScriptExtension
