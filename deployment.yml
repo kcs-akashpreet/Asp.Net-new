@@ -1,36 +1,37 @@
-apiVersion: apps/v1
+apiVersion: v1
+kind: Service
+metadata:
+  name: dotnet-deployment
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  #selector:
+    #run: httpd-deployment
+  selector:
+    app: dotnet-deployment
+  selector:
+    app: dotnet-deployment
+  type: LoadBalancer
+---
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: dotnet-core-deployment
+  name: dotnet-deployment
   labels:
-    app: dotnet-core-deployment
 spec:
   replicas: 2
-  selector:
-    matchLabels:
-      app: dotnet-core-deployment
   template:
     metadata:
       labels:
-        app: dotnet-core-deployment
+        app: dotnet-deployment
     spec:
       containers:
-      - name: dotnet-core
-        image: akashkcs/dotnet:#{Build.BuildId}#
-        ports:
-        - containerPort: 80
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: dotnet-core
-spec:
-  ports:
-    - name: dotnet-core
-      port: 80
-      protocol: TCP
-  selector:
-    app: dotnet-core-deployment
-  type: LoadBalancer
-  externalIPs:
-    - 10.0.4.5
+        - name: dotnet
+          image: tsttst.azurecr.io/kcsakashpreethttpd:#{Build.BuildId}#
+          imagePullPolicy: Always
+          name: dotnet-deployment
+          ports:
+          - containerPort: 80
+      imagePullSecrets:
+        - name: acr-secret
