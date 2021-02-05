@@ -19,9 +19,7 @@ steps:
     feedsToUse: 'select'
 - task: DotNetCoreCLI@2
   inputs:
-    command: 'publish'
-    publishWebProjects: true
-    arguments: '-c Release -o out'
+    command: 'build'
 - task: CopyFiles@2
   displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
   inputs:
