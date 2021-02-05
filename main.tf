@@ -46,4 +46,3 @@ resource "azurerm_app_service" "appservice" {
     use_32_bit_worker_process = true
   }
 }
-}
