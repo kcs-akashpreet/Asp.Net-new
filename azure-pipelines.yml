@@ -17,13 +17,13 @@ steps:
   displayName: 'Install .Net Core sdk'
   inputs:
     packageType: 'sdk'
-    version: '2.1x'
+    version: 2.1x
     performMultiLevelLookup: true
     
     
 - task: UseDotNet@2
   inputs:
-    version: '2.1x'
+    version: 2.1x
   displayName: setdotnet version to use
 
 - task: DotNetCoreCLI@2
