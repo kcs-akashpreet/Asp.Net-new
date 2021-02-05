@@ -7,28 +7,41 @@ trigger:
 - main
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
 steps:
-- task: NuGetToolInstaller@1
-
-- task: NuGetCommand@2
+- task: UseDotNet@2
+  displayName: 'Install .Net Core sdk'
   inputs:
-    restoreSolution: '$(solution)'
-
-- task: VSBuild@1
+    packageType: 'sdk'
+    version: '2.1x'
+    performMultiLevelLookup: true
+    
+    
+- task: UseDotNet@2
   inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    version: '2.1x'
+  displayName: setdotnet version to use
 
-- task: VSTest@2
+- task: DotNetCoreCLI@2
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration $(buildConfigurations)'
+- task: DotNetCoreCLI@2
+  displayName: binaries
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '--configuration $(buildConfiguration) --output $(Build).ArtifactStagingDirectory'
+    zipAfterPublish: True
+    
+- task: PublishBuildArtifacts@1
+  displayName: publish
+  inputs:
+    PathtoPublish: '$(BuildArtifactStagingDirectory)'
+    ArtifactName: 'myweb'
+
