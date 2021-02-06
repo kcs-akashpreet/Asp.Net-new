@@ -118,4 +118,4 @@ stages:
         azureSubscription: 'terraform-sp'
         appType: 'webApp'
         WebAppName: 'terraform-kcs'
-        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+        packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
