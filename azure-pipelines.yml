@@ -69,54 +69,53 @@ stages:
   jobs:
   - job: build
     continueOnError: false
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    variables:
+      buildConfiguration: 'Release'
     steps:
-pool:
-  vmImage: 'ubuntu-latest'
-
-variables:
-  buildConfiguration: 'Release'
-
-steps:
-- task: UseDotNet@2
-  displayName: 'Install .Net Core sdk'
-  inputs:
-    packageType: 'sdk'
-    version: 2.1.x
-    performMultiLevelLookup: true
+    - task: UseDotNet@2
+      displayName: 'Install .Net Core sdk'
+      inputs:
+        packageType: 'sdk'
+        version: 2.1.x
+        performMultiLevelLookup: true
     
     
-- task: UseDotNet@2
-  inputs:
-    version: 2.1.x
-  displayName: setdotnet version to use
+    - task: UseDotNet@2
+      inputs:
+        version: 2.1.x
+      displayName: setdotnet version to use
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfigurations)'
-- task: DotNetCoreCLI@2
-  displayName: binaries
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: True
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: 'build'
+        projects: '**/*.csproj'
+        arguments: '--configuration $(buildConfigurations)'
+    - task: DotNetCoreCLI@2
+      displayName: binaries
+      inputs:
+        command: 'publish'
+        publishWebProjects: true
+        arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        zipAfterPublish: True
     
-- task: PublishBuildArtifacts@1
-  displayName: publish
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'Drop'
+    - task: PublishBuildArtifacts@1
+      displayName: publish
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'Drop'
 
 - stage: release
   jobs:
   - job: release
     continueOnError: false
     steps:
-- task: AzureRmWebAppDeployment@4
-  inputs:
-    ConnectionType: 'AzureRM'
-    appType: 'webApp'
-    WebAppName: 'terraform-kcs'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'terraform-sp'
+        appType: 'webApp'
+        WebAppName: 'terraform-kcs'
+        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
