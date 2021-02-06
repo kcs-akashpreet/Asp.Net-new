@@ -118,4 +118,4 @@ stages:
         azureSubscription: 'terraform-sp'
         appType: 'webApp'
         WebAppName: 'terraform-kcs'
-        packageForLinux: '$(System.DefaultWorkingDirectory)/Asp.Net-new/Drop/s.zip'
+        packageForLinux: '$(System.DefaultWorkingDirectory)/Drop/s.zip'
