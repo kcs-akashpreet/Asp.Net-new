@@ -36,13 +36,4 @@ resource "azurerm_app_service" "appservice" {
   resource_group_name = azurerm_resource_group.resourcegroup.name
   app_service_plan_id = azurerm_app_service_plan.serviceplan.id
   
-  site_config {
-    linux_fx_version = "DOTNETCORE|2.2"
-    min_tls_version = "1.2"
-    always_on = true
-    scm_type = "None"
-    managed_pipeline_mode = "Integrated"
-    websockets_enabled = false
-    use_32_bit_worker_process = true
-  }
 }
