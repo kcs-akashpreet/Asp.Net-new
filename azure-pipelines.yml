@@ -66,6 +66,10 @@ stages:
              command: 'apply'
              environmentServiceNameAzureRM: 'terraform-sp'
 - stage: build
+  jobs:
+  - job: build
+    continueOnError: false
+    steps:
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -105,6 +109,11 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'Drop'
 
+- stage: release
+  jobs:
+  - job: release
+    continueOnError: false
+    steps:
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
