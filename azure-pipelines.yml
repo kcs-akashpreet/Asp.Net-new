@@ -101,14 +101,11 @@ stages:
         arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: True
     
-    - task: CopyFiles@2
-      displayName: 'Copy Files to artifact staging directory'
+    - task: PublishBuildArtifacts@1
+      displayName: publish
       inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)'
-        Contents: '**/*.zip'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    - upload: $(Build.ArtifactStagingDirectory)
-      artifact: drop
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
 
 - stage: release
   jobs:
@@ -121,4 +118,4 @@ stages:
         azureSubscription: 'terraform-sp'
         appType: 'webApp'
         WebAppName: 'terraform-kcs'
-        packageForLinux: '$(Build.ArtifactStagingDirectory)/drop/*.zip'
+        packageForLinux: '$(System.DefaultWorkingDirectory)/Asp.Net-new/Drop/s.zip'
