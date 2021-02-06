@@ -105,7 +105,7 @@ stages:
       displayName: publish
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'Drop'
+        ArtifactName: 'drop'
 
 - stage: release
   jobs:
@@ -118,4 +118,4 @@ stages:
         azureSubscription: 'terraform-sp'
         appType: 'webApp'
         WebAppName: 'terraform-kcs'
-        packageForLinux: '$(Build.ArtifactStagingDirectory)/Drop/*.zip'
+        packageForLinux: '$(System.ArtifactsDirectory)/drop/*.zip'
