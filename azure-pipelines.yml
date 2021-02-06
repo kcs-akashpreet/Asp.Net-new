@@ -104,3 +104,10 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'Drop'
 
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'terraform-sp'
+    appType: 'webApp'
+    WebAppName: 'terraform-kcs'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
