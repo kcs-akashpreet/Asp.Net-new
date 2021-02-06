@@ -1,7 +1,70 @@
 
 trigger:
 - master
+stages:
+- stage: validate
+  jobs:
+  - job: validate
+    continueOnError: false
+    steps:
+    - task: TerraformInstaller@0
+      displayName: 'install'
+      inputs:
+        terraformVersion: '0.12.26'
+    - task: TerraformTaskV1@0
+      displayName: 'init'
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        backendServiceArm: 'terraform-sp'
+        backendAzureRmResourceGroupName: 'terraform-rg'
+        backendAzureRmStorageAccountName: 'sktkcsaccount'
+        backendAzureRmContainerName: 'sktkcsaccount'
+        backendAzureRmKey: 'terraform.tfstate'
 
+    - task: TerraformTaskV1@0
+      displayName: "validate"
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
+- stage: deploy
+  jobs:
+  - deployment: deploy_terraform
+    continueOnError: false
+    environment: 'dev'
+    strategy:
+     runOnce:
+      deploy:
+       steps:
+         - checkout: self
+         - task: TerraformInstaller@0
+           displayName: 'install'
+           inputs:
+             terraformVersion: '0.12.26'
+         - task: TerraformTaskV1@0
+           displayName: 'init'
+           inputs:
+             provider: 'azurerm'
+             command: 'init'
+             backendServiceArm: 'terraform-sp'
+             backendAzureRmResourceGroupName: 'terraform-rg'
+             backendAzureRmStorageAccountName: 'sktkcsaccount'
+             backendAzureRmContainerName: 'sktkcsaccount'
+             backendAzureRmKey: 'terraform.tfstate'
+
+         - task: TerraformTaskV1@0
+           displayName: 'plan'
+           inputs:
+             provider: 'azurerm'
+             command: 'plan'
+             environmentServiceNameAzureRM: 'terraform-sp'
+
+         - task: TerraformTaskV1@0
+           displayName: 'apply'
+           inputs:
+             provider: 'azurerm'
+             command: 'apply'
+             environmentServiceNameAzureRM: 'terraform-sp'
 pool:
   vmImage: 'ubuntu-latest'
 
