@@ -65,9 +65,9 @@ stages:
              provider: 'azurerm'
              command: 'apply'
              environmentServiceNameAzureRM: 'terraform-sp'
-- stage: build
+- stage: CICD
   jobs:
-  - job: build
+  - job: build_deploy
     continueOnError: false
     pool:
       vmImage: 'ubuntu-latest'
