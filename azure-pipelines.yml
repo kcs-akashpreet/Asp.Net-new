@@ -101,12 +101,6 @@ stages:
         arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: True
     
-
-- stage: release
-  jobs:
-  - job: release
-    continueOnError: false
-    steps:
     - task: AzureRmWebAppDeployment@4
       inputs:
         ConnectionType: 'AzureRM'
